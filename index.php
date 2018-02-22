@@ -3,18 +3,19 @@
 <title>Channel Changer</title>
 </head>
 <body>
-<h1>Entercom NY Agile Channel Changer</h1>
+<h1>
 <?php
+require('db.php');
+$titleresult = $db->query("SELECT value FROM settings WHERE setting = 'title'");
+while ($titlerow=$titleresult->fetchArray())
+	echo $titlerow["value"];
+echo "</h1>";
+$result = $db->query("SELECT name, address as ip FROM tuners ORDER BY name ASC");
 
-$receiver_json = file_get_contents('receivers.json');
-$receiver_array = json_decode($receiver_json,true);
-//echo "<pre>";
-foreach ($receiver_array as $key => $rx) {
-    $ip = $rx['ip'];
-    $type = $rx['type'];
-    include("gettuned_$type.php");
-    
-    echo("<form action =\"tune_$type.php\" method=\"post\">");   
+while ($rx=$result->fetchArray()) {
+    $ip = long2ip($rx['ip']);
+    include("gettuned_directv.php");
+    echo("<form action =\"tune_directv.php\" method=\"post\">");   
     echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>
     <input type=\"submit\" Value=\"Tune ".$rx['name']."\">
     <input type=\"hidden\" name=\"ip\" value=\"$ip\">
