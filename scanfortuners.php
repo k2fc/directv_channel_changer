@@ -11,36 +11,41 @@ while ($row = $result->fetchArray()){
 	for ($scanAddress=$net+1;$scanAddress<$broadcast; $scanAddress++){
 		ini_set('display_errors', 'Off');
 		ini_set('default_socket_timeout',1);
-		if (ping(long2ip($scanAddress))){
-			$box_serial = getSerialNumber($scanAddress);
-			if ($box_serial){
-				$box_result=$db->query('SELECT * FROM tuners WHERE serialNum = \''. $box_serial . '\'');
-				$nrows=0;
-				$box=null;
-				while ($boxrow = $box_result->fetchArray()){
-					$nrows++;
-					$box=$boxrow;
-				}
-				if ($nrows ==1) {
-					if ($box["address"] == $scanAddress){
-						echo "Box Matches!\n";
+		if ($ip != $scanAddress){
+			echo "Checking ".long2ip($scanAddress);
+			if (ping(long2ip($scanAddress))){
+				$box_serial = getSerialNumber($scanAddress);
+				if ($box_serial){
+					$box_result=$db->query('SELECT * FROM tuners WHERE serialNum = \''. $box_serial . '\'');
+					$nrows=0;
+					$box=null;
+					while ($boxrow = $box_result->fetchArray()){
+						$nrows++;
+						$box=$boxrow;
+					}
+					if ($nrows ==1) {
+						if ($box["address"] == $scanAddress){
+							echo "Box Matches!";
+						}
+						else {
+							$db->query("UPDATE tuners SET address = $scanAddress WHERE serialNum = '$box_serial'");
+						}
 					}
 					else {
-						$db->query("UPDATE tuners SET address = $scanAddress WHERE serialNum = '$box_serial'");
+						$newname = "Discovered ". substr($box_serial,-4);
+						$addboxquery = "INSERT INTO tuners (serialNum, name, address) VALUES('$box_serial','$newname',$scanAddress)";
+						$db->query("DELETE FROM tuners WHERE address = $scanAddress");
+						$db->query("DELETE FROM tuners WHERE serialNum = '$box_serial'");
+						$db->query($addboxquery);
 					}
+					$box_result->reset();
 				}
-				else {
-					$newname = "Discovered ". substr($box_serial,-4);
-					$addboxquery = "INSERT INTO tuners (serialNum, name, address) VALUES('$box_serial','$newname',$scanAddress)";
-					$db->query("DELETE FROM tuners WHERE address = $scanAddress");
-					$db->query("DELETE FROM tuners WHERE serialNum = '$box_serial'");
-					$db->query($addboxquery);
-				}
-				$box_result->reset();
 			}
+			echo "\n";
 		}
 	}
 }
+error_log("Receiver scan complete.",0);
 
 function getSerialNumber ($json_address){
         ini_set('default_socket_timeout', 1);
