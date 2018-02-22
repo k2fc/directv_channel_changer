@@ -6,6 +6,6 @@
         $channel = $tuned->major;
     }
     else{
-        $channel = $tuned->major.'.'.$tuned_minor;
+        $channel = $tuned->major.'.'.$tuned->minor;
     }
 ?>
