@@ -1,4 +1,5 @@
 <?php
+include('ping.php');
 require('db.php');
 getInterfaces($db);
 $statement = $db->prepare('SELECT * FROM interfaces;');
@@ -25,10 +26,11 @@ while ($row = $result->fetchArray()){
 					}
 					if ($nrows ==1) {
 						if ($box["address"] == $scanAddress){
-							echo "Box Matches!";
+							echo " Box $box_serial matches database record!";
 						}
 						else {
 							$db->query("UPDATE tuners SET address = $scanAddress WHERE serialNum = '$box_serial'");
+							echo " Box $box_serial now at address $scanAddress.";
 						}
 					}
 					else {
@@ -40,6 +42,14 @@ while ($row = $result->fetchArray()){
 					}
 					$box_result->reset();
 				}
+				else {
+					echo " doesn't appear to be a DirecTV box, or it's set up wrong.";
+					$db->query("UPDATE tuners SET address = 0 WHERE address = $scanAddress");
+				}
+			}
+			else {
+				echo " ... ping timed out";
+				$db->query("UPDATE tuners SET address = 0 WHERE address = $scanAddress");
 			}
 			echo "\n";
 		}
@@ -53,23 +63,6 @@ function getSerialNumber ($json_address){
         $feed = file_get_contents($json_url);
         $json = json_decode($feed, true);
         return $json["receiverId"];
-}
-
-function ping($host, $timeout = 10) {
-    /* ICMP ping packet with a pre-calculated checksum */
-    $package = "\x08\x00\x7d\x4b\x00\x00\x00\x00PingHost";
-    $socket  = socket_create(AF_INET, SOCK_RAW, 1);
-    socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 0, 'usec' => ($timeout * 1000)));
-    socket_connect($socket, $host, null);
-    $ts = microtime(true);
-    socket_send($socket, $package, strLen($package), 0);
-    if (socket_read($socket, 255)) {
-        $result = microtime(true) - $ts;
-    } else {
-        $result = false;
-    }
-    socket_close($socket);
-    return $result;
 }
 
 function getInterfaces($db) {
