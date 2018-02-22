@@ -1,5 +1,6 @@
 <?php
 require('db.php');
+getInterfaces($db);
 $statement = $db->prepare('SELECT * FROM interfaces;');
 $result=$db->query('SELECT * FROM interfaces');
 while ($row = $result->fetchArray()){
@@ -64,6 +65,18 @@ function ping($host, $timeout = 10) {
     }
     socket_close($socket);
     return $result;
+}
+
+function getInterfaces($db) {
+	exec("/sbin/ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d: -f2 | awk '{print $2}'",$ips);
+	exec("/sbin/ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d: -f2 | awk '{print $4}'",$masks);
+	$interfacenum = 0;
+	$db->query("DELETE FROM interfaces");
+	foreach($ips as $localip){
+		echo $localip."\n";
+		$db->query("INSERT INTO interfaces (Address, SubnetMask) VALUES(".ip2long($localip).",".ip2long($masks[$interfacenum]).")");
+		$interfacenum++;
+	}
 }
 
 ?>
