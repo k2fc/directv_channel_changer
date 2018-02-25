@@ -5,14 +5,14 @@ getInterfaces($db);
 $statement = $db->prepare('SELECT * FROM interfaces;');
 $result=$db->query('SELECT * FROM interfaces');
 while ($row = $result->fetchArray()){
-	$ip = $row["Address"];
+	$myIP = $row["Address"];
 	$mask = $row["SubnetMask"];
-	$net = ($ip & $mask);
+	$net = ($myIP & $mask);
 	$broadcast = $net | (~$mask);
 	for ($scanAddress=$net+1;$scanAddress<$broadcast; $scanAddress++){
 		ini_set('display_errors', 'Off');
 		ini_set('default_socket_timeout',1);
-		if ($ip != $scanAddress){
+		if ($myIP != $scanAddress){
 			echo "Checking ".long2ip($scanAddress);
 			if (ping(long2ip($scanAddress))){
 				$box_serial = getSerialNumber($scanAddress);
@@ -41,6 +41,10 @@ while ($row = $result->fetchArray()){
 						$db->query($addboxquery);
 					}
 					$box_result->reset();
+					$ip=$scanAddress;
+					$dbTuned = $box["tuned"];
+					$name = $box["name"];
+					include ("gettuned_directv.php");
 				}
 				else {
 					echo " doesn't appear to be a DirecTV box, or it's set up wrong.";

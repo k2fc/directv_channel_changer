@@ -11,10 +11,13 @@ $titleresult = $db->query("SELECT value FROM settings WHERE setting = 'title'");
 while ($titlerow=$titleresult->fetchArray())
 	echo $titlerow["value"];
 echo "</h1>";
-$result = $db->query("SELECT name, address as ip FROM tuners ORDER BY name ASC");
+$result = $db->query("SELECT name, address as ip, tuned, serialNum FROM tuners ORDER BY name ASC");
 
 while ($rx=$result->fetchArray()) {
     $ip = long2ip($rx['ip']);
+    $name = $rx['name'];
+    $dbTuned = $rx['tuned'];
+    $box_serial = $rx['serialNum'];
     include("gettuned_directv.php");
     echo("<form action =\"tune_directv.php\" method=\"post\">");   
     echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>

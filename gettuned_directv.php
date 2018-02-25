@@ -8,4 +8,8 @@
     else{
         $channel = $tuned->major.'.'.$tuned->minor;
     }
+    if ($channel!=$dbTuned){
+	error_log("$name has been tuned to $channel.",0);
+	$db->query("UPDATE tuners SET tuned = $channel WHERE serialNum = \"$box_serial\"");
+    }
 ?>
