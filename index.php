@@ -21,6 +21,7 @@ while ($rx=$result->fetchArray()) {
     <input type=\"submit\" Value=\"Tune ".$rx['name']."\">
     <input type=\"hidden\" name=\"ip\" value=\"$ip\">
     <input type=\"hidden\" name=\"requester\" value=\"$requester\">
+    <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
     </form>
     ");
 }

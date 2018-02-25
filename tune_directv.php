@@ -2,8 +2,8 @@
 $channel = $_POST['channel'];
 $ip = $_POST['ip'];
 $requester = $_POST['requester'];
-
-error_log("User at $requester requested channel change to $channel on $ip",0);
+$boxname = $_POST['name'];
+error_log("User at $requester requested channel change to $channel on $boxname",0);
 
 if (strpos($channel,'-')!== false){
 
