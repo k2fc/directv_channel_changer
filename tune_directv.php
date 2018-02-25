@@ -1,6 +1,9 @@
 <?php
 $channel = $_POST['channel'];
 $ip = $_POST['ip'];
+$requester = $_POST['requester'];
+
+error_log("User at $requester requested channel change to $channel on $ip",0);
 
 if (strpos($channel,'-')!== false){
 
@@ -19,7 +22,13 @@ else{
     $major = sanitizeInput($channel);
     $dinettes = file_get_contents("http://$ip:8080/tv/tune?major=$major");
 }
-echo($dinettes);
+$status = json_decode($dinettes,true)["status"];
+if ($status["code"] == 200){
+	error_log("Tuner at $ip responded ". $status["code"].": ". $status["msg"],0);
+}
+else{
+	error_log("Tuner at $ip responded ". $status["code"].": ". $status["msg"],1);
+}
 sleep(4);
 header("Location: index.php"); /* Redirect browser */
 exit();

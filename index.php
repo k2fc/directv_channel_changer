@@ -5,6 +5,7 @@
 <body>
 <h1>
 <?php
+$requester = $_SERVER['REMOTE_ADDR'];
 require('db.php');
 $titleresult = $db->query("SELECT value FROM settings WHERE setting = 'title'");
 while ($titlerow=$titleresult->fetchArray())
@@ -19,6 +20,7 @@ while ($rx=$result->fetchArray()) {
     echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>
     <input type=\"submit\" Value=\"Tune ".$rx['name']."\">
     <input type=\"hidden\" name=\"ip\" value=\"$ip\">
+    <input type=\"hidden\" name=\"requester\" value=\"$requester\">
     </form>
     ");
 }
