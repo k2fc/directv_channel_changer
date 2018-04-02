@@ -27,7 +27,7 @@ if ($status["code"] == 200){
 	error_log("Tuner at $ip responded ". $status["code"].": ". $status["msg"],0);
 }
 else{
-	error_log("Tuner at $ip responded ". $status["code"].": ". $status["msg"],1);
+	error_log("Tuner at $ip responded ". $status["code"].": ". $status["msg"],0);
 }
 sleep(4);
 header("Location: index.php"); /* Redirect browser */

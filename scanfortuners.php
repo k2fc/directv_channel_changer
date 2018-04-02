@@ -30,7 +30,8 @@ while ($row = $result->fetchArray()){
 						}
 						else {
 							$db->query("UPDATE tuners SET address = $scanAddress WHERE serialNum = '$box_serial'");
-							echo " Box $box_serial now at address $scanAddress.";
+							echo " Box $box_serial now at address ".long2ip($scanAddress).".";
+							error_log("Box ".$box["name"]. " has changed to address ".long2ip($scanAddress).".",0);
 						}
 					}
 					else {
@@ -41,10 +42,12 @@ while ($row = $result->fetchArray()){
 						$db->query($addboxquery);
 					}
 					$box_result->reset();
-					$ip=$scanAddress;
+					$ip=long2ip($scanAddress);
 					$dbTuned = $box["tuned"];
 					$name = $box["name"];
+					echo " Checking tuned channel...  ";
 					include ("gettuned_directv.php");
+					echo " Tuned to $channel";
 				}
 				else {
 					echo " doesn't appear to be a DirecTV box, or it's set up wrong.";
