@@ -27,6 +27,13 @@ while ($rx=$result->fetchArray()) {
     <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
     </form>
     ");
+    echo("<form action =\"reboot_directv.php\" method=\"post\">");   
+    echo("<input type=\"submit\" Value=\"Reboot ".$rx['name']."\">
+    <input type=\"hidden\" name=\"ip\" value=\"$ip\">
+    <input type=\"hidden\" name=\"requester\" value=\"$requester\">
+    <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
+    </form>
+    ");
 }
 ?>
 <p>Made by Dennis - April 2017
