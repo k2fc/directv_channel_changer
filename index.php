@@ -21,14 +21,9 @@ while ($rx=$result->fetchArray()) {
     include("gettuned_directv.php");
     echo("<form action =\"tune_directv.php\" method=\"post\">");   
     echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>
-    <input type=\"submit\" Value=\"Tune ".$rx['name']."\">
-    <input type=\"hidden\" name=\"ip\" value=\"$ip\">
-    <input type=\"hidden\" name=\"requester\" value=\"$requester\">
-    <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
-    </form>
-    ");
-    echo("<form action =\"reboot_directv.php\" method=\"post\">");   
-    echo("<input type=\"submit\" Value=\"Reboot ".$rx['name']."\">
+    <button name=\"action\" type=\"submit\" Value=\"tune\"> Tune ".$rx['name']."</button>
+    <button name=\"action\" type=\"submit\" Value=\"info\"> Info</button>
+    <button name=\"action\" type=\"submit\" Value=\"reboot\"> Reboot ".$rx['name']."</button>
     <input type=\"hidden\" name=\"ip\" value=\"$ip\">
     <input type=\"hidden\" name=\"requester\" value=\"$requester\">
     <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
