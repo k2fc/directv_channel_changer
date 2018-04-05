@@ -24,6 +24,7 @@ while ($rx=$result->fetchArray()) {
     <button name=\"action\" type=\"submit\" Value=\"tune\"> Tune ".$rx['name']."</button>
     <button name=\"action\" type=\"submit\" Value=\"info\"> Info</button>
     <button name=\"action\" type=\"submit\" Value=\"reboot\"> Reboot ".$rx['name']."</button>
+    <a href=\"remote.php?ip=$ip&requester=$requester&name=".$rx['name']."\">Use Remote Control</a>
     <input type=\"hidden\" name=\"ip\" value=\"$ip\">
     <input type=\"hidden\" name=\"requester\" value=\"$requester\">
     <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
