@@ -4,7 +4,7 @@ $ip = $_POST['ip'];
 $requester = $_POST['requester'];
 $boxname = $_POST['name'];
 $action = $_POST['action'];
-error_log("User at $requester requested channel change to $channel on $boxname",0);
+
 
 if ($action == 'reboot'){
 	error_log("User at $requester requested reboot of $boxname",0);
@@ -12,12 +12,13 @@ if ($action == 'reboot'){
 	sleep(5);
 	$dinettes = file_get_contents("http://$ip:8080/remote/processKey?key=poweron");
 }
-if ($action == 'info'){
+elseif ($action == 'info'){
 	error_log("User at $requester requested info display on $boxname",0);
 	$dinettes = file_get_contents("http://$ip:8080/remote/processKey?key=info");
 	
 }
-else{
+elseif ($action == 'tune'){
+	error_log("User at $requester requested channel change to $channel on $boxname",0);
 	if (strpos($channel,'-')!== false){
 	
 	    $channelparts = explode("-",2);
@@ -36,6 +37,10 @@ else{
 	    $dinettes = file_get_contents("http://$ip:8080/tv/tune?major=$major");
 	}
 	sleep(4);
+}
+else{
+	error_log("User at $requester submitted an invalid request $action",0);
+	echo("Invalid request: $action");
 }
 
 $status = json_decode($dinettes,true)["status"];
