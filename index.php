@@ -19,17 +19,24 @@ while ($rx=$result->fetchArray()) {
     $dbTuned = $rx['tuned'];
     $box_serial = $rx['serialNum'];
     include("gettuned_directv.php");
-    echo("<form action =\"tune_directv.php\" method=\"post\">");   
-    echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>
-    <button name=\"action\" type=\"submit\" Value=\"tune\"> Tune ".$rx['name']."</button>
-    <button name=\"action\" type=\"submit\" Value=\"info\"> Info</button>
-    <button name=\"action\" type=\"submit\" Value=\"reboot\"> Reboot ".$rx['name']."</button>
-    <a href=\"remote.php?ip=$ip&requester=$requester&name=".$rx['name']."\">Use Remote Control</a>
-    <input type=\"hidden\" name=\"ip\" value=\"$ip\">
-    <input type=\"hidden\" name=\"requester\" value=\"$requester\">
-    <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
-    </form>
-    ");
+    if (isset($channel)){
+    	echo("<form action =\"tune_directv.php\" method=\"post\">");   
+	    echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>
+	    <button name=\"action\" type=\"submit\" Value=\"tune\"> Tune ".$rx['name']."</button>
+	    <button name=\"action\" type=\"submit\" Value=\"info\"> Info</button>
+	    <button name=\"action\" type=\"submit\" Value=\"reboot\"> Reboot ".$rx['name']."</button>
+	    <a href=\"remote.php?ip=$ip&name=".$rx['name']."\">Use Remote Control</a>
+	    <input type=\"hidden\" name=\"ip\" value=\"$ip\">
+	    <input type=\"hidden\" name=\"requester\" value=\"$requester\">
+	    <input type=\"hidden\" name=\"name\" value=\"".$rx['name']."\">
+	    </form>
+	    ");
+    }
+    else {
+    	echo ("<p><b>" . $rx['name'] . " isn't responding.  </b> Check back later.  
+    	It will probably be found in the next scan.");
+    }
+    
 }
 ?>
 <p>Made by Dennis - April 2017
