@@ -22,6 +22,7 @@ while ($rx=$result->fetchArray()) {
     if (isset($channel)){
     	echo("<form action =\"tune_directv.php\" method=\"post\">");   
 	    echo($rx['name']."  <input type=\"text\" name=\"channel\" Value=\"$channel\">  ".$tuned->callsign."<br>
+	    $tuned->title<br>
 	    <button name=\"action\" type=\"submit\" Value=\"tune\"> Tune ".$rx['name']."</button>
 	    <button name=\"action\" type=\"submit\" Value=\"info\"> Info</button>
 	    <button name=\"action\" type=\"submit\" Value=\"reboot\"> Reboot ".$rx['name']."</button>
