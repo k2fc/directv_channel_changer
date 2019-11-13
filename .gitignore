@@ -1,2 +1,5 @@
 info.php
 *.db
+phpliteadmin.php
+guidedata.php.save
+phpliteadmin.config.php

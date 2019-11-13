@@ -1,6 +1,7 @@
 <?php
     $gettuned_url = 'http://'.$ip.':8080/tv/getTuned';
     $tuned = json_decode(file_get_contents($gettuned_url,true));
+    ini_set('default_socket_timeout',5);
     //var_dump($tuned);
     $channel = 0;
     if (isset($tuned)){
