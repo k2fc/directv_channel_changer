@@ -3,7 +3,7 @@ include('ping.php');
 require('db.php');
 getInterfaces($db);
 $statement = $db->prepare('SELECT * FROM interfaces;');
-$result=$db->query('SELECT * FROM interfaces');
+$result=$db->query('SELECT * FROM interfaces WHERE exclude != 1');
 while ($row = $result->fetchArray()){
 	$myIP = $row["Address"];
 	$mask = $row["SubnetMask"];
@@ -76,10 +76,17 @@ function getInterfaces($db) {
 	exec("/sbin/ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d: -f2 | awk '{print $2}'",$ips);
 	exec("/sbin/ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d: -f2 | awk '{print $4}'",$masks);
 	$interfacenum = 0;
-	$db->query("DELETE FROM interfaces");
+	$statement = $db->prepare('SELECT * FROM interfaces;');
+	$result=$db->query('SELECT * FROM interfaces');
+
+//	$db->query("DELETE FROM interfaces");
 	foreach($ips as $localip){
 		echo $localip."\n";
-		$db->query("INSERT INTO interfaces (Address, SubnetMask) VALUES(".ip2long($localip).",".ip2long($masks[$interfacenum]).")");
+		$select = $db->query("SELECT * FROM interfaces where Address = ".ip2long($localip));
+		$result = $select->fetchArray();
+		if(!$result){
+			$db->query("INSERT INTO interfaces (Address, SubnetMask, exclude) VALUES(".ip2long($localip).",".ip2long($masks[$interfacenum]).",0)");
+		}
 		$interfacenum++;
 	}
 }
